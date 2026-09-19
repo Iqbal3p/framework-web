@@ -24,8 +24,6 @@ Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
  
 Route::post('/login', [LoginController::class, 'store'])
-
-
     ->middleware('guest')
     ->name('login.store');
  
@@ -42,6 +40,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:admin,kasir'])->group(function () {
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
+});
+
+Route::middleware(['auth', 'role:kasir'])->group(function () {
+    Route::get('/pos/history', function () {
+        return 'Riwayat Transaksi Saya';
+    })->name('pos.history');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
