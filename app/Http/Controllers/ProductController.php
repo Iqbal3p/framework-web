@@ -52,6 +52,27 @@ class ProductController extends Controller
         return view('master-data.product.index', compact('products', 'categories'));
     }
 
+    public function show(Product $product)
+    {
+        $product->load([
+            'category',
+            'transactionDetails.transaction'
+        ]);
+
+        $totalTerjual = $product->transactionDetails->sum('qty');
+
+        $riwayat = $product->transactionDetails()
+            ->with('transaction')
+            ->latest()
+            ->take(10)
+            ->get();
+
+        return view(
+            'master-data.product.show',
+            compact('product', 'totalTerjual', 'riwayat')
+        );
+    }
+
     public function edit(Product $product)
     {
         $categories = Category::orderBy('name')->get();
